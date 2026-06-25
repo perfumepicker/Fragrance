@@ -59,7 +59,7 @@
                 <h1 class="font-serif text-4xl md:text-6xl font-bold mb-4 leading-tight">Discover Your <span class="text-gold-400">Scent</span></h1>
                 <p class="text-perfume-300 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed mb-6">Select aroma notes to find matching fragrances from Mykonos & Velixir collections. From fresh aquatic to sweet captivating.</p>
                 <button onclick="viewAllPerfumes()" class="view-all-btn text-white font-semibold px-8 py-3 rounded-full shadow-lg hover:shadow-xl transition-all transform hover:scale-105">
-                    👁️ View All 26 Fragrances
+                    👁️ View All 31 Fragrances
                 </button>
             </div>
         </div>
@@ -118,9 +118,9 @@
         <div id="emptyState" class="text-center py-16">
             <div class="text-8xl mb-6">💨</div>
             <h3 class="font-serif text-2xl font-semibold text-perfume-800 mb-3">Start Exploring</h3>
-            <p class="text-perfume-500 max-w-md mx-auto leading-relaxed mb-6">Select at least one aroma note above to see matching fragrances. 26 variants across Mykonos & Velixir.</p>
+            <p class="text-perfume-500 max-w-md mx-auto leading-relaxed mb-6">Select at least one aroma note above to see matching fragrances. 31 variants across Mykonos & Velixir.</p>
             <button onclick="viewAllPerfumes()" class="view-all-btn text-white font-semibold px-6 py-3 rounded-full shadow-lg hover:shadow-xl transition-all">
-                👁️ View All 26 Fragrances
+                👁️ View All 31 Fragrances
             </button>
         </div>
 
@@ -194,7 +194,9 @@
             "Sicilian Orange":"🍊","Neroli":"🌼","Nutmeg":"🫘","Vetiver":"🌾",
             "Biscuit":"🍪","Milk":"🥛","Honey":"🍯","White Sugar":"🍬",
             "Madagascar Vanilla":"🍦🌴","Citron":"🍋","Ambroxan":"✨","Black Tea":"🍵",
-            "Calabrian Bergamot":"🍊","Georgywood":"🪵","Ambrofix":"✨","Akigalawood":"🌲"
+            "Calabrian Bergamot":"🍊","Georgywood":"🪵","Ambrofix":"✨","Akigalawood":"🌲",
+            "Basil":"🌿","Thyme":"🌿","Pineapple":"🍍","Birch":"🌲","Ambergris":"🌊",
+            "Watery Notes":"💧","Ambrette":"🌸","Ylang-Ylang":"🌸","Violet":"💜"
         };
 
         function getNoteEmoji(note) {
@@ -234,26 +236,31 @@
             { id:19, name:"On The Rocks", brand:"Mykonos", group:"structured", groupLabel:"💼 Structured • Warm • Refined", groupDesc:"Ideal for professional & formal settings", price:419000, priceFormatted:"Rp 419.000", notes:["Bergamot","Lemon","Whiskey Notes","Chocolate","Coffee","Cardamom","Vanilla","Amber","Oakwood","Patchouli"], topNotes:["Bergamot","Lemon","Whiskey Notes"], middleNotes:["Chocolate","Coffee","Cardamom"], baseNotes:["Vanilla","Amber","Oakwood","Patchouli"], description:"Sophisticated cocktail of whiskey, chocolate, and coffee on vanilla-oakwood base.", longevity:"8-10 hours", sillage:"Moderate to Heavy" },
             { id:20, name:"Vanilla Clouds", brand:"Mykonos", group:"sweet", groupLabel:"🌙 Sweet • Spicy • Captivating", groupDesc:"Designed for evenings & special encounters", price:369000, priceFormatted:"Rp 369.000", notes:["Marshmallow","Mandarin Orange","Vanilla Bean","Orchid","White Musk","Sandalwood","Amber"], topNotes:["Marshmallow","Mandarin Orange"], middleNotes:["Vanilla Bean","Orchid"], baseNotes:["White Musk","Sandalwood","Amber"], description:"Dreamy and soft like floating on vanilla clouds with marshmallow, orchid, and sandalwood.", longevity:"8-10 hours", sillage:"Soft to Moderate" },
             
-            // VELIXIR - 6 variants
+            // VELIXIR - 11 variants
             { id:21, name:"Uranus", brand:"Velixir", group:"velixir", groupLabel:"✨ Velixir • Fresh • Bold", groupDesc:"Energetic and cosmic freshness", price:299000, priceFormatted:"Rp 299.000", notes:["Sicilian Orange","Bergamot","Neroli","Pink Pepper","Nutmeg","Cardamom","Vetiver"], topNotes:["Sicilian Orange","Bergamot"], middleNotes:["Neroli","Pink Pepper","Nutmeg","Cardamom"], baseNotes:["Vetiver"], description:"Cosmic freshness with Sicilian orange, neroli, and spicy cardamom on vetiver base.", longevity:"6-8 hours", sillage:"Moderate" },
             { id:22, name:"Galatea", brand:"Velixir", group:"velixir", groupLabel:"✨ Velixir • Sweet • Gourmand", groupDesc:"Indulgent and delicious sweetness", price:319000, priceFormatted:"Rp 319.000", notes:["Biscuit","Caramel","Milk","Honey","White Sugar","Tonka Bean","White Musk","Vanilla","Praline","Amber"], topNotes:["Biscuit","Caramel"], middleNotes:["Milk","Honey","White Sugar","Tonka Bean"], baseNotes:["White Musk","Vanilla","Praline","Amber"], description:"Sweet indulgence with biscuit, caramel, and honey melting into vanilla-praline dream.", longevity:"8-10 hours", sillage:"Heavy" },
             { id:23, name:"Adonis", brand:"Velixir", group:"velixir", groupLabel:"✨ Velixir • Fresh • Bold", groupDesc:"Energetic and cosmic freshness", price:289000, priceFormatted:"Rp 289.000", notes:["Lavender","Bergamot","Mint","Madagascar Vanilla","Benzoin","Amber","Tonka Bean","Woody Notes"], topNotes:["Lavender","Bergamot","Mint"], middleNotes:["Madagascar Vanilla","Benzoin"], baseNotes:["Amber","Tonka Bean","Woody Notes"], description:"Divine masculinity with lavender, mint, and Madagascar vanilla on amber-tonka base.", longevity:"6-8 hours", sillage:"Moderate" },
             { id:24, name:"Morpheus", brand:"Velixir", group:"velixir", groupLabel:"✨ Velixir • Fresh • Bold", groupDesc:"Energetic and cosmic freshness", price:309000, priceFormatted:"Rp 309.000", notes:["Citron","Sicilian Orange","Bergamot","Ginger","Neroli","Ambroxan","Guaiac Wood","Black Tea"], topNotes:["Citron","Sicilian Orange","Bergamot"], middleNotes:["Ginger","Neroli"], baseNotes:["Ambroxan","Guaiac Wood","Black Tea"], description:"Dreamlike and ethereal with citron, ginger, and black tea on ambroxan-guaiac base.", longevity:"6-8 hours", sillage:"Moderate" },
             { id:25, name:"Concordia", brand:"Velixir", group:"velixir", groupLabel:"✨ Velixir • Fresh • Bold", groupDesc:"Energetic and cosmic freshness", price:279000, priceFormatted:"Rp 279.000", notes:["Bergamot","Grapefruit","Ginger"], topNotes:["Bergamot"], middleNotes:["Grapefruit"], baseNotes:["Ginger"], description:"Harmonious simplicity with bergamot, grapefruit, and ginger for balanced freshness.", longevity:"4-6 hours", sillage:"Soft" },
-            { id:26, name:"Icarus", brand:"Velixir", group:"velixir", groupLabel:"✨ Velixir • Fresh • Bold", groupDesc:"Energetic and cosmic freshness", price:329000, priceFormatted:"Rp 329.000", notes:["Pear","Calabrian Bergamot","Mandarin Orange","Ginger","Orange Blossom","Georgywood","Musk","Ambrofix","Akigalawood","Cedarwood"], topNotes:["Pear","Calabrian Bergamot","Mandarin Orange"], middleNotes:["Ginger","Orange Blossom","Georgywood"], baseNotes:["Musk","Ambrofix","Akigalawood","Cedarwood"], description:"Soaring freshness with pear, Calabrian bergamot, and ginger on innovative woody musk base.", longevity:"6-8 hours", sillage:"Moderate" }
+            { id:26, name:"Icarus", brand:"Velixir", group:"velixir", groupLabel:"✨ Velixir • Fresh • Bold", groupDesc:"Energetic and cosmic freshness", price:329000, priceFormatted:"Rp 329.000", notes:["Pear","Calabrian Bergamot","Mandarin Orange","Ginger","Orange Blossom","Georgywood","Musk","Ambrofix","Akigalawood","Cedarwood"], topNotes:["Pear","Calabrian Bergamot","Mandarin Orange"], middleNotes:["Ginger","Orange Blossom","Georgywood"], baseNotes:["Musk","Ambrofix","Akigalawood","Cedarwood"], description:"Soaring freshness with pear, Calabrian bergamot, and ginger on innovative woody musk base.", longevity:"6-8 hours", sillage:"Moderate" },
+            { id:27, name:"Demeter", brand:"Velixir", group:"velixir", groupLabel:"✨ Velixir • Fresh • Green", groupDesc:"Fresh green, minty, clean", price:269000, priceFormatted:"Rp 269.000", notes:["Mint","Lemon","Basil","Thyme","Rosemary","Blackcurrant","Lavender","Jasmine","Cedarwood","Musk"], topNotes:["Mint","Lemon","Basil","Thyme"], middleNotes:["Rosemary","Blackcurrant","Lavender","Jasmine"], baseNotes:["Cedarwood","Musk"], description:"Fresh green and minty with basil, thyme, and rosemary on a clean cedarwood-musk base.", longevity:"4-6 hours", sillage:"Soft to Moderate" },
+            { id:28, name:"Apollo", brand:"Velixir", group:"velixir", groupLabel:"✨ Velixir • Fresh • Masculine", groupDesc:"Aventus DNA, masculine and versatile", price:349000, priceFormatted:"Rp 349.000", notes:["Pineapple","Bergamot","Black Currant","Apple","Birch","Patchouli","Jasmine","Musk","Oakmoss","Ambergris","Vanilla"], topNotes:["Pineapple","Bergamot","Black Currant","Apple"], middleNotes:["Birch","Patchouli","Jasmine"], baseNotes:["Musk","Oakmoss","Ambergris","Vanilla"], description:"Aventus-inspired masculine versatility with pineapple, birch, and smoky oakmoss.", longevity:"8-10 hours", sillage:"Heavy" },
+            { id:29, name:"Ares", brand:"Velixir", group:"velixir", groupLabel:"✨ Velixir • Fresh • Sporty", groupDesc:"Fresh sporty for daily wear", price:279000, priceFormatted:"Rp 279.000", notes:["Mandarin Orange","Grapefruit","Lemon","Orange Blossom","Musk","Cedar","Sandalwood","Amber"], topNotes:["Mandarin Orange","Grapefruit","Lemon"], middleNotes:["Orange Blossom"], baseNotes:["Musk","Cedar","Sandalwood","Amber"], description:"Fresh sporty energy with citrus burst and orange blossom on woody amber base.", longevity:"6-8 hours", sillage:"Moderate" },
+            { id:30, name:"Hera", brand:"Velixir", group:"velixir", groupLabel:"✨ Velixir • Fresh • Elegant", groupDesc:"Fresh sweet elegant, calmer than Apollo", price:319000, priceFormatted:"Rp 319.000", notes:["Pear","Mandarin Orange","Citrus","Violet","Lavender","Musk","Sandalwood","Vanilla","Patchouli"], topNotes:["Pear","Mandarin Orange","Citrus"], middleNotes:["Violet","Lavender"], baseNotes:["Musk","Sandalwood","Vanilla","Patchouli"], description:"Fresh sweet elegance with pear and violet, calmer and more refined than Apollo.", longevity:"6-8 hours", sillage:"Moderate" },
+            { id:31, name:"Artemis", brand:"Velixir", group:"velixir", groupLabel:"✨ Velixir • Fresh • Aquatic", groupDesc:"Fresh aquatic unique and clean", price:289000, priceFormatted:"Rp 289.000", notes:["Watery Notes","Pear","Ambrette","Ylang-Ylang","Jasmine","Patchouli"], topNotes:["Watery Notes","Pear","Ambrette"], middleNotes:["Ylang-Ylang","Jasmine"], baseNotes:["Patchouli"], description:"Unique fresh aquatic with watery notes, pear, and ylang-ylang on patchouli base.", longevity:"4-6 hours", sillage:"Soft" }
         ];
 
         const allNotes = [...new Set(perfumes.flatMap(p => p.notes))].sort();
 
         const noteCategories = {
-            "🍊 Citrus & Fruits": allNotes.filter(n => ["Bergamot","Orange","Lemon","Mandarin","Grapefruit","Lime","Lychee","Pear","Peach","Melon","Apple","Pineapple","Banana","Citron","Fizzy"].some(k => n.toLowerCase().includes(k.toLowerCase()))),
-            "🌸 Florals": allNotes.filter(n => ["Jasmine","Rose","Lavender","Lily","Orchid","Tuberose","Neroli","Orange Blossom","Freesia","Geranium","Valley","Blossom"].some(k => n.toLowerCase().includes(k.toLowerCase()))),
-            "🪵 Woods & Earth": allNotes.filter(n => ["Wood","Cedar","Sandalwood","Oak","Guaiac","Vetiver","Patchouli","Moss","Orris","Oud","Amberwood","Cashmere","Softwood","Oakwood","Georgywood","Akigalawood"].some(k => n.toLowerCase().includes(k.toLowerCase()))),
-            "🌶️ Spices": allNotes.filter(n => ["Ginger","Cinnamon","Pepper","Cardamom","Clove","Nutmeg","Saffron","Myrrh"].some(k => n.toLowerCase().includes(k.toLowerCase()))),
+            "🍊 Citrus & Fruits": allNotes.filter(n => ["Bergamot","Orange","Lemon","Mandarin","Grapefruit","Lime","Lychee","Pear","Peach","Melon","Apple","Pineapple","Banana","Citron","Fizzy","Pineapple","Black Currant"].some(k => n.toLowerCase().includes(k.toLowerCase()))),
+            "🌸 Florals": allNotes.filter(n => ["Jasmine","Rose","Lavender","Lily","Orchid","Tuberose","Neroli","Orange Blossom","Freesia","Geranium","Valley","Blossom","Violet","Ylang-Ylang"].some(k => n.toLowerCase().includes(k.toLowerCase()))),
+            "🪵 Woods & Earth": allNotes.filter(n => ["Wood","Cedar","Sandalwood","Oak","Guaiac","Vetiver","Patchouli","Moss","Orris","Oud","Amberwood","Cashmere","Softwood","Oakwood","Georgywood","Akigalawood","Birch"].some(k => n.toLowerCase().includes(k.toLowerCase()))),
+            "🌶️ Spices": allNotes.filter(n => ["Ginger","Cinnamon","Pepper","Cardamom","Clove","Nutmeg","Saffron","Myrrh","Basil","Thyme"].some(k => n.toLowerCase().includes(k.toLowerCase()))),
             "🍬 Gourmand & Sweet": allNotes.filter(n => ["Vanilla","Caramel","Praline","Chocolate","Coffee","Marshmallow","Biscuit","Honey","Sugar","Tonka","Milk","White Chocolate","Almond"].some(k => n.toLowerCase().includes(k.toLowerCase()))),
-            "☁️ Musk & Amber": allNotes.filter(n => ["Musk","Amber","Ambroxan","Ambrofix","Modern Amber","Warm Amber"].some(k => n.toLowerCase().includes(k.toLowerCase()))),
+            "☁️ Musk & Amber": allNotes.filter(n => ["Musk","Amber","Ambroxan","Ambrofix","Modern Amber","Warm Amber","Ambergris"].some(k => n.toLowerCase().includes(k.toLowerCase()))),
             "🟤 Resins & Smokes": allNotes.filter(n => ["Incense","Smoke","Smoky","Leather","Benzoin","Myrrh","Tobacco","Whiskey","Labdanum"].some(k => n.toLowerCase().includes(k.toLowerCase()))),
-            "💧 Aquatic & Fresh": allNotes.filter(n => ["Water","Marine","Ozonic","Sea","Green Tea","Earl Grey","Matcha","Mint","Coconut","Green Notes"].some(k => n.toLowerCase().includes(k.toLowerCase())))
+            "💧 Aquatic & Fresh": allNotes.filter(n => ["Water","Marine","Ozonic","Sea","Green Tea","Earl Grey","Matcha","Mint","Coconut","Green Notes","Watery"].some(k => n.toLowerCase().includes(k.toLowerCase())))
         };
 
         const noteColors = {
@@ -364,7 +371,6 @@
             document.getElementById('resultsSection').classList.remove('hidden');
             document.getElementById('noResults').classList.add('hidden');
             
-            // Reset all pills
             document.querySelectorAll('.note-pill').forEach(pill => pill.classList.remove('active'));
             
             const results = perfumes.map(perfume => ({
@@ -608,6 +614,11 @@
                             </div>
                             <div>
                                 <p class="text-xs font-semibold ${isVelixir ? 'text-velixir-600' : 'text-gold-600'} uppercase tracking-wide mb-2">🌙 Base Notes</p>
+                                <div class
+                                }).join('')}</div>
+                            </div>
+                            <div>
+                                <p class="text-xs font-semibold ${isVelixir ? 'text-velixir-600' : 'text-gold-600'} uppercase tracking-wide mb-2">🌙 Base Notes</p>
                                 <div class="flex flex-wrap gap-2">${perfume.baseNotes.map(note => {
                                     const isSelected = selectedNotes.has(note);
                                     const emoji = getNoteEmoji(note);
@@ -637,3 +648,4 @@
     </script>
 </body>
 </html>
+

@@ -1,651 +1,105 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mykonos & Velixir Parfum Explorer — Find by Notes</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: { 'serif': ['Playfair Display', 'serif'], 'sans': ['Inter', 'sans-serif'] },
-                    colors: {
-                        'gold': { 50:'#fdf9f0',100:'#f9f0d8',200:'#f2e0ab',300:'#e8c96e',400:'#d4a843',500:'#b8860b',600:'#9a7009',700:'#7a5c0b',800:'#5c450e',900:'#3d2f0a' },
-                        'perfume': { 50:'#faf8f5',100:'#f0ebe3',200:'#ddd3c4',300:'#c4b49a',400:'#a89070',500:'#8b7355',600:'#6b5a44',700:'#4a3d2e',800:'#2f251c',900:'#1a1612' },
-                        'velixir': { 50:'#f0f9ff',100:'#e0f2fe',200:'#bae6fd',300:'#7dd3fc',400:'#38bdf8',500:'#0ea5e9',600:'#0284c7',700:'#0369a1',800:'#075985',900:'#0c4a6e' }
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        .note-pill { transition: all 0.3s cubic-bezier(0.4,0,0.2,1); }
-        .note-pill:hover { transform: translateY(-2px); }
-        .note-pill.active { background: linear-gradient(135deg,#b8860b,#d4a843); color:white; box-shadow:0 4px 15px rgba(184,134,11,0.4); border-color:transparent; }
-        .perfume-card { transition: all 0.4s cubic-bezier(0.4,0,0.2,1); animation: fadeInUp 0.5s ease-out; }
-        .perfume-card:hover { transform: translateY(-8px); box-shadow:0 20px 40px rgba(0,0,0,0.15); }
-        @keyframes fadeInUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
-        .hero-pattern { background-image: radial-gradient(circle at 1px 1px,rgba(184,134,11,0.1) 1px,transparent 0); background-size:20px 20px; }
-        .glass-panel { background:rgba(255,255,255,0.7); backdrop-filter:blur(12px); border:1px solid rgba(255,255,255,0.3); }
-        .scent-bar { height:6px; border-radius:3px; background:linear-gradient(90deg,#b8860b,#d4a843); }
-        .scent-bar-velixir { height:6px; border-radius:3px; background:linear-gradient(90deg,#0ea5e9,#38bdf8); }
-        .match-badge { background:linear-gradient(135deg,#b8860b,#d4a843); }
-        .match-badge-velixir { background:linear-gradient(135deg,#0ea5e9,#38bdf8); }
-        .group-badge.fresh { background:linear-gradient(135deg,#0ea5e9,#38bdf8); }
-        .group-badge.structured { background:linear-gradient(135deg,#78716c,#a8a29e); }
-        .group-badge.sweet { background:linear-gradient(135deg,#7c3aed,#a78bfa); }
-        .group-badge.velixir { background:linear-gradient(135deg,#0ea5e9,#0369a1); }
-        .emoji-visual { font-size:3.5rem; line-height:1; filter:drop-shadow(0 4px 6px rgba(0,0,0,0.1)); }
-        .map-container { width:100%; height:450px; border-radius:1rem; overflow:hidden; }
-        #map { width:100%; height:100%; }
-        .view-all-btn { background: linear-gradient(135deg, #b8860b, #d4a843); }
-        .view-all-btn:hover { background: linear-gradient(135deg, #9a7009, #b8860b); }
-    </style>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blox Fruits Stock by Vince</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, 'Segoe UI', Roboto, sans-serif; background: #0f1117; color: #eaeaea; min-height: 100vh; }
+  header { padding: 20px 24px 12px; }
+  h1 { font-size: 20px; font-weight: 600; }
+  .sub { font-size: 12px; color: #888; margin-top: 4px; }
+  .timers { display: flex; gap: 12px; flex-wrap: wrap; padding: 12px 24px; }
+  .timer { flex: 1; min-width: 160px; background: #1a1d27; border: 1px solid #2a2e3d; border-radius: 12px; padding: 12px 16px; }
+  .timer .label { font-size: 11px; color: #888; }
+  .timer .cd { font-size: 26px; font-weight: 600; font-variant-numeric: tabular-nums; margin-top: 2px; }
+  .timer .next { font-size: 11px; color: #aaa; margin-top: 4px; }
+  .frame-wrap { margin: 8px 24px 24px; border: 1px solid #2a2e3d; border-radius: 12px; overflow: hidden; background: #1a1d27; }
+  iframe { width: 100%; height: 70vh; border: 0; display: block; }
+  .fallback { display: none; padding: 40px 24px; text-align: center; }
+  .fallback p { color: #888; font-size: 14px; margin-bottom: 16px; }
+  a.btn { display: inline-block; background: #5865f2; color: #fff; text-decoration: none; padding: 10px 24px; border-radius: 8px; font-size: 14px; font-weight: 600; }
+  .note { padding: 0 24px 20px; font-size: 11px; color: #666; }
+</style>
 </head>
-<body class="bg-perfume-50 font-sans text-perfume-900 min-h-screen">
+<body>
+<header>
+  <h1>Blox Fruits Stock by Vince</h1>
+  <div class="sub">Live dari fruityblox.com/stock · auto-refresh tiap reset</div>
+</header>
 
-    <!-- Header -->
-    <header class="relative bg-gradient-to-br from-perfume-900 via-perfume-800 to-perfume-900 text-white overflow-hidden">
-        <div class="hero-pattern absolute inset-0"></div>
-        <div class="relative max-w-7xl mx-auto px-4 py-12 md:py-20">
-            <div class="text-center">
-                <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 mb-6 border border-white/20">
-                    <span class="text-sm font-medium">🧴 Mykonos & Velixir Parfum Explorer</span>
-                </div>
-                <h1 class="font-serif text-4xl md:text-6xl font-bold mb-4 leading-tight">Discover Your <span class="text-gold-400">Scent</span></h1>
-                <p class="text-perfume-300 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed mb-6">Select aroma notes to find matching fragrances from Mykonos & Velixir collections. From fresh aquatic to sweet captivating.</p>
-                <button onclick="viewAllPerfumes()" class="view-all-btn text-white font-semibold px-8 py-3 rounded-full shadow-lg hover:shadow-xl transition-all transform hover:scale-105">
-                    👁️ View All 31 Fragrances
-                </button>
-            </div>
-        </div>
-        <div class="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-perfume-50 to-transparent"></div>
-    </header>
+<div class="timers">
+  <div class="timer">
+    <div class="label">Normal dealer · reset tiap 4 jam</div>
+    <div class="cd" id="nCd">--:--:--</div>
+    <div class="next" id="nNext"></div>
+  </div>
+  <div class="timer">
+    <div class="label">Mirage dealer · reset tiap 2 jam</div>
+    <div class="cd" id="mCd">--:--:--</div>
+    <div class="next" id="mNext"></div>
+  </div>
+</div>
 
-    <main class="max-w-7xl mx-auto px-4 py-8">
+<div class="frame-wrap">
+  <iframe id="stockFrame" src="https://fruityblox.com/stock" title="FruityBlox Stock"></iframe>
+  <div class="fallback" id="fallback">
+    <p>fruityblox.com tidak mengizinkan ditampilkan di dalam halaman (blocked).<br>Buka langsung lewat tombol ini — stoknya tetap auto-update tiap reset:</p>
+    <a class="btn" href="https://fruityblox.com/stock" target="_blank" rel="noopener">Buka fruityblox.com/stock</a>
+  </div>
+</div>
 
-        <!-- Selected Notes -->
-        <div id="selectedNotesSection" class="hidden mb-8">
-            <div class="glass-panel rounded-2xl p-6 shadow-lg">
-                <div class="flex items-center justify-between mb-4">
-                    <h3 class="font-serif text-xl font-semibold text-perfume-800">🎯 Selected Notes</h3>
-                    <div class="flex gap-2">
-                        <button onclick="viewAllPerfumes()" class="text-sm text-gold-600 hover:text-gold-700 font-medium transition-colors">👁️ View All</button>
-                        <button onclick="clearAllNotes()" class="text-sm text-red-500 hover:text-red-600 font-medium transition-colors">🗑️ Reset</button>
-                    </div>
-                </div>
-                <div id="selectedNotesContainer" class="flex flex-wrap gap-2"></div>
-                <div class="mt-4 pt-4 border-t border-perfume-200">
-                    <p class="text-sm text-perfume-600"><span id="matchCount" class="font-bold text-gold-600">0</span> fragrances found</p>
-                </div>
-            </div>
-        </div>
+<div class="note">Halaman ini auto-reload iframe saat countdown menyentuh 00:00:00, jadi daftar buah selalu yang terbaru. Timer mengikuti zona waktu perangkatmu.</div>
 
-        <!-- Notes Categories -->
-        <div class="mb-12">
-            <h2 class="font-serif text-2xl font-bold text-perfume-800 mb-2 text-center">Choose Aroma Notes</h2>
-            <p class="text-perfume-500 text-center mb-8">Click to select, click again to remove — or <button onclick="viewAllPerfumes()" class="text-gold-600 font-semibold hover:underline">view all fragrances</button></p>
-            <div id="notesCategories" class="space-y-8"></div>
-        </div>
+<script>
+(function(){
+  var frame = document.getElementById('stockFrame');
+  var fallback = document.getElementById('fallback');
 
-        <!-- Results -->
-        <div id="resultsSection" class="hidden">
-            <div class="flex items-center justify-between mb-6">
-                <h2 class="font-serif text-2xl font-bold text-perfume-800">🧪 Results</h2>
-                <div class="flex items-center gap-2">
-                    <label class="text-sm text-perfume-600 font-medium">Sort:</label>
-                    <select id="sortSelect" onchange="sortResults()" class="bg-white border border-perfume-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gold-400">
-                        <option value="match">⭐ Best Match</option>
-                        <option value="name">🔤 Name A-Z</option>
-                        <option value="group">🏷️ Group</option>
-                        <option value="brand">🏷️ Brand</option>
-                    </select>
-                </div>
-            </div>
-            <div id="resultsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-            <div id="noResults" class="hidden text-center py-16">
-                <div class="text-6xl mb-4">🔍</div>
-                <h3 class="font-serif text-xl font-semibold text-perfume-700 mb-2">No matching fragrances</h3>
-                <p class="text-perfume-500">Try different notes or <button onclick="viewAllPerfumes()" class="text-gold-600 font-semibold hover:underline">view all fragrances</button>.</p>
-            </div>
-        </div>
+  // Deteksi kalau iframe diblokir (X-Frame-Options / CSP)
+  frame.addEventListener('error', showFallback);
+  setTimeout(function(){
+    try {
+      var doc = frame.contentDocument || frame.contentWindow.document;
+      if (!doc || doc.body === null || doc.body.children.length === 0) showFallback();
+    } catch(e) { /* cross-origin = loaded (atau blocked, tidak bisa dibedakan) */ }
+  }, 4000);
+  function showFallback(){ frame.style.display = 'none'; fallback.style.display = 'block'; }
 
-        <!-- Empty State -->
-        <div id="emptyState" class="text-center py-16">
-            <div class="text-8xl mb-6">💨</div>
-            <h3 class="font-serif text-2xl font-semibold text-perfume-800 mb-3">Start Exploring</h3>
-            <p class="text-perfume-500 max-w-md mx-auto leading-relaxed mb-6">Select at least one aroma note above to see matching fragrances. 31 variants across Mykonos & Velixir.</p>
-            <button onclick="viewAllPerfumes()" class="view-all-btn text-white font-semibold px-6 py-3 rounded-full shadow-lg hover:shadow-xl transition-all">
-                👁️ View All 31 Fragrances
-            </button>
-        </div>
+  function nextReset(now, hours){
+    var d = new Date(now.getTime());
+    var h = d.getUTCHours();
+    d.setUTCHours(Math.floor(h / hours) * hours + hours, 0, 0, 0);
+    return d;
+  }
+  function fmt(t){ return t.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}); }
+  function diffStr(t, now){
+    var s = Math.max(0, Math.floor((t - now)/1000));
+    return String(Math.floor(s/3600)).padStart(2,'0') + ':' + String(Math.floor(s%3600/60)).padStart(2,'0') + ':' + String(s%60).padStart(2,'0');
+  }
 
-        <!-- Store Locator Map -->
-        <div class="mt-16 mb-8">
-            <div class="text-center mb-8">
-                <h2 class="font-serif text-3xl font-bold text-perfume-800 mb-2">🗺️ Find Mykonos & Velixir Near You</h2>
-                <p class="text-perfume-500">Watsons, Guardian & BeautyHaul stores in Jakarta</p>
-            </div>
-            <div class="glass-panel rounded-2xl p-4 shadow-lg">
-                <div class="map-container mb-4">
-                    <div id="map"></div>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div class="bg-blue-50 rounded-xl p-4 border border-blue-200">
-                        <h3 class="font-bold text-blue-800 mb-2 flex items-center gap-2">💙 Watsons</h3>
-                        <ul class="text-sm text-blue-700 space-y-1" id="watsonsList"></ul>
-                    </div>
-                    <div class="bg-orange-50 rounded-xl p-4 border border-orange-200">
-                        <h3 class="font-bold text-orange-800 mb-2 flex items-center gap-2">🧡 Guardian</h3>
-                        <ul class="text-sm text-orange-700 space-y-1" id="guardianList"></ul>
-                    </div>
-                    <div class="bg-purple-50 rounded-xl p-4 border border-purple-200">
-                        <h3 class="font-bold text-purple-800 mb-2 flex items-center gap-2">💜 BeautyHaul (Velixir & Mykonos)</h3>
-                        <ul class="text-sm text-purple-700 space-y-1" id="beautyhaulList"></ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </main>
+  var lastNormal = null, lastMirage = null;
+  function tick(){
+    var now = new Date();
+    var n = nextReset(now, 4), m = nextReset(now, 2);
+    document.getElementById('nCd').textContent = diffStr(n, now);
+    document.getElementById('mCd').textContent = diffStr(m, now);
+    document.getElementById('nNext').textContent = 'reset berikutnya ' + fmt(n);
+    document.getElementById('mNext').textContent = 'reset berikutnya ' + fmt(m);
 
-    <!-- Detail Modal -->
-    <div id="detailModal" class="fixed inset-0 z-50 hidden">
-        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeModal()"></div>
-        <div class="relative z-10 flex items-center justify-center min-h-screen p-4">
-            <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto animate-[fadeInUp_0.3s_ease-out]">
-                <div id="modalContent"></div>
-            </div>
-        </div>
-    </div>
-
-    <footer class="bg-perfume-900 text-perfume-400 py-8 mt-16">
-        <div class="max-w-7xl mx-auto px-4 text-center">
-            <p class="font-serif text-lg text-perfume-300 mb-2">🧴 Mykonos & Velixir Parfum Explorer</p>
-            <p class="text-sm">Discover the scent that tells your story.</p>
-        </div>
-    </footer>
-
-    <script>
-        const noteEmojis = {
-            "Sicilian Bergamot":"🍊","Bergamot":"🍊","Apple":"🍎","Grapefruit":"🍊","Charred Pineapple":"🍍🔥",
-            "Lavender":"💜","Artemisia":"🌿","Lily of the Valley":"🌸","Pink Pepper":"🌶️","Vanilla":"🍦","Dried Jasmine":"🌼🍂",
-            "White Musk":"☁️","Cedarwood":"🌲","Moss":"🌿","Amber":"🟤","Patchouli":"🍂","Smoky Notes":"💨",
-            "Ginger":"🫚","Cardamom":"🫘","Orris":"⚜️","Orange Blossom":"🌼","Modern Amber":"🟤✨",
-            "Pear":"🍐","Pink Salt":"🧂","Rhubarb":"🥬","Water Blossoms":"🪷","Marine Notes":"🌊",
-            "Softwood":"🪵","Caramel":"🍮","Mandarin Orange":"🍊","Lemon":"🍋","Lychee":"🍒",
-            "Rosemary":"🌿","Jasmine":"🌼","Geranium":"🌺","Oakmoss":"🌿","Musk":"☁️",
-            "Sage":"🌿","Praline":"🍬","Cinnamon":"🪵","Leather":"🟤","Oud":"🪵",
-            "Amalfi Lemon":"🍋","Mint":"🌿","Green Tea":"🍵","Blackcurrant":"🍇","Green Notes":"🍃",
-            "Rose":"🌹","Fizzy Lime":"✨🍋","Coconut Water":"🥥","Sandalwood":"🪵","Amberwood":"🪵✨",
-            "Peach":"🍑","Earl Grey Tea":"🍵","Fig":"🫒","Warm Amber":"🟤🔥",
-            "Black Pepper":"🌶️","Saffron":"🌸","Blue Java Banana":"🍌","Ozonic Notes":"💨",
-            "Tuberose":"🌸","Cashmere Wood":"🪵","Matcha Green Tea":"🍵","Milky Notes":"🥛",
-            "White Chocolate":"🍫","Tonka Bean":"🫘","Sweet Melon":"🍈","Juicy Pear":"🍐",
-            "Freesia":"🌸","Warm Caramel":"🍮🔥","Toasted Marshmallow":"🔥","Vanilla Orchid":"🍦🌸",
-            "Guaiac Wood":"🌲","Vanilla Bean":"🍦","Benzoin":"🟤","Burnt Cinnamon":"🔥🪵",
-            "Myrrh":"🪔","Bitter Coffee":"☕","Tobacco":"🌿","Almond":"🥜",
-            "Pepper":"🌶️","Citrus":"🍊","Labdanum":"🌿","Woody Notes":"🪵",
-            "Whiskey Notes":"🥃","Chocolate":"🍫","Coffee":"☕","Oakwood":"🌲",
-            "Marshmallow":"☁️","Orchid":"🌸",
-            "Sicilian Orange":"🍊","Neroli":"🌼","Nutmeg":"🫘","Vetiver":"🌾",
-            "Biscuit":"🍪","Milk":"🥛","Honey":"🍯","White Sugar":"🍬",
-            "Madagascar Vanilla":"🍦🌴","Citron":"🍋","Ambroxan":"✨","Black Tea":"🍵",
-            "Calabrian Bergamot":"🍊","Georgywood":"🪵","Ambrofix":"✨","Akigalawood":"🌲",
-            "Basil":"🌿","Thyme":"🌿","Pineapple":"🍍","Birch":"🌲","Ambergris":"🌊",
-            "Watery Notes":"💧","Ambrette":"🌸","Ylang-Ylang":"🌸","Violet":"💜"
-        };
-
-        function getNoteEmoji(note) {
-            for (const [key, emoji] of Object.entries(noteEmojis)) {
-                if (note.toLowerCase() === key.toLowerCase()) return emoji;
-            }
-            for (const [key, emoji] of Object.entries(noteEmojis)) {
-                if (note.toLowerCase().includes(key.toLowerCase())) return emoji;
-            }
-            return "✨";
-        }
-
-        function getTopEmojis(notes, count=4) {
-            return notes.slice(0,count).map(n => getNoteEmoji(n)).join(' ');
-        }
-
-        const perfumes = [
-            // MYKONOS - 20 variants
-            { id:1, name:"Glitch", brand:"Mykonos", group:"fresh", groupLabel:"🌊 Fresh • Aquatic • Clean", groupDesc:"Best for daytime & warm weather", price:429000, priceFormatted:"Rp 429.000", notes:["Sicilian Bergamot","Apple","Grapefruit","Charred Pineapple","Lavender","Artemisia","Lily of the Valley","Pink Pepper","Vanilla","Dried Jasmine","White Musk","Cedarwood","Moss","Amber","Patchouli","Smoky Notes"], topNotes:["Sicilian Bergamot","Apple","Grapefruit","Charred Pineapple"], middleNotes:["Lavender","Artemisia","Lily of the Valley","Pink Pepper","Vanilla","Dried Jasmine"], baseNotes:["White Musk","Cedarwood","Moss","Amber","Patchouli","Smoky Notes"], description:"A unique modern scent with charred pineapple, apple, and smoky nuances for a memorable character.", longevity:"8-10 hours", sillage:"Moderate to Heavy" },
-            { id:2, name:"Conquer", brand:"Mykonos", group:"structured", groupLabel:"💼 Structured • Warm • Refined", groupDesc:"Ideal for professional & formal settings", price:399000, priceFormatted:"Rp 399.000", notes:["Bergamot","Ginger","Cardamom","Orris","Orange Blossom","Patchouli","Musk","Modern Amber","Vanilla"], topNotes:["Bergamot","Ginger","Cardamom"], middleNotes:["Orris","Orange Blossom"], baseNotes:["Patchouli","Musk","Modern Amber","Vanilla"], description:"Masculine and assertive with ginger, cardamom, and orange blossom blending into patchouli and amber.", longevity:"8-10 hours", sillage:"Heavy" },
-            { id:3, name:"California Blue", brand:"Mykonos", group:"fresh", groupLabel:"🌊 Fresh • Aquatic • Clean", groupDesc:"Best for daytime & warm weather", price:379000, priceFormatted:"Rp 379.000", notes:["Lavender","Pear","Grapefruit","Pink Salt","Rhubarb","Water Blossoms","Marine Notes","Moss","Softwood","Caramel"], topNotes:["Lavender","Pear","Grapefruit","Pink Salt"], middleNotes:["Rhubarb","Water Blossoms","Marine Notes"], baseNotes:["Moss","Softwood","Caramel"], description:"Mediterranean beach vibes with lavender, pear, and sea salt blending into water blossoms and caramel.", longevity:"4-6 hours", sillage:"Soft" },
-            { id:4, name:"California Signature", brand:"Mykonos", group:"fresh", groupLabel:"🌊 Fresh • Aquatic • Clean", groupDesc:"Best for daytime & warm weather", price:349000, priceFormatted:"Rp 349.000", notes:["Mandarin Orange","Lemon","Lychee","Rosemary","Jasmine","Geranium","Oakmoss","Cedarwood","Musk"], topNotes:["Mandarin Orange","Lemon","Lychee"], middleNotes:["Rosemary","Jasmine","Geranium"], baseNotes:["Oakmoss","Cedarwood","Musk"], description:"Bright California vibes with fresh lychee, rosemary, and jasmine melting into oakmoss and cedar.", longevity:"6-8 hours", sillage:"Moderate" },
-            { id:5, name:"Inception", brand:"Mykonos", group:"structured", groupLabel:"💼 Structured • Warm • Refined", groupDesc:"Ideal for professional & formal settings", price:299000, priceFormatted:"Rp 299.000", notes:["Bergamot","Lemon","Pepper","Black Tea","Ginger","Orris","Amber","Cedarwood","Musk"], topNotes:["Bergamot","Lemon","Pepper"], middleNotes:["Black Tea","Ginger","Orris"], baseNotes:["Amber","Cedarwood","Musk"], description:"An energizing scent with citrus, black tea, and ginger warming into amber and cedarwood.", longevity:"6-8 hours", sillage:"Moderate" },
-            { id:6, name:"Invade", brand:"Mykonos", group:"sweet", groupLabel:"🌙 Sweet • Spicy • Captivating", groupDesc:"Designed for evenings & special encounters", price:359000, priceFormatted:"Rp 359.000", notes:["Bergamot","Sage","Lavender","Praline","Cinnamon","Leather","Vanilla","Oud","Amber","Cedarwood"], topNotes:["Bergamot","Sage","Lavender"], middleNotes:["Praline","Cinnamon","Leather"], baseNotes:["Vanilla","Oud","Amber","Cedarwood"], description:"Seductive and alluring with praline, cinnamon, and leather sweetened by vanilla and oud.", longevity:"8-10 hours", sillage:"Heavy" },
-            { id:7, name:"Sorrento", brand:"Mykonos", group:"fresh", groupLabel:"🌊 Fresh • Aquatic • Clean", groupDesc:"Best for daytime & warm weather", price:389000, priceFormatted:"Rp 389.000", notes:["Bergamot","Amalfi Lemon","Mint","Ginger","Green Tea","Jasmine","White Musk","Amber","Cedarwood"], topNotes:["Bergamot","Amalfi Lemon","Mint"], middleNotes:["Ginger","Green Tea","Jasmine"], baseNotes:["White Musk","Amber","Cedarwood"], description:"Citrus freshness with Amalfi lemon, mint, and green tea evoking the Italian seaside.", longevity:"6-8 hours", sillage:"Moderate" },
-            { id:8, name:"Penthouse", brand:"Mykonos", group:"fresh", groupLabel:"🌊 Fresh • Aquatic • Clean", groupDesc:"Best for daytime & warm weather", price:459000, priceFormatted:"Rp 459.000", notes:["Blackcurrant","Grapefruit","Green Notes","Rose","Lily of the Valley","Jasmine","Musk","Cedarwood","Amber"], topNotes:["Blackcurrant","Grapefruit","Green Notes"], middleNotes:["Rose","Lily of the Valley","Jasmine"], baseNotes:["Musk","Cedarwood","Amber"], description:"Luxurious and contemporary with blackcurrant, rose, and lily of the valley for elegant modernity.", longevity:"8-10 hours", sillage:"Moderate" },
-            { id:9, name:"Empire", brand:"Mykonos", group:"fresh", groupLabel:"🌊 Fresh • Aquatic • Clean", groupDesc:"Best for daytime & warm weather", price:449000, priceFormatted:"Rp 449.000", notes:["Fizzy Lime","Bergamot","Mint","Coconut Water","Jasmine","Ginger","Sandalwood","Musk","Amberwood"], topNotes:["Fizzy Lime","Bergamot","Mint"], middleNotes:["Coconut Water","Jasmine","Ginger"], baseNotes:["Sandalwood","Musk","Amberwood"], description:"Energizing collaboration with fizzy lime, coconut water, and ginger on a sandalwood base.", longevity:"6-8 hours", sillage:"Moderate" },
-            { id:10, name:"Sansa", brand:"Mykonos", group:"structured", groupLabel:"💼 Structured • Warm • Refined", groupDesc:"Ideal for professional & formal settings", price:379000, priceFormatted:"Rp 379.000", notes:["Moss","Mandarin Orange","Peach","Rose","Jasmine","Geranium","Patchouli","Amber","Sandalwood","Musk"], topNotes:["Moss","Mandarin Orange","Peach"], middleNotes:["Rose","Jasmine","Geranium"], baseNotes:["Patchouli","Amber","Sandalwood","Musk"], description:"Elegant and grounded with moss, peach, and rose resting on patchouli and sandalwood.", longevity:"8-10 hours", sillage:"Moderate" },
-            { id:11, name:"Slow Living", brand:"Mykonos", group:"fresh", groupLabel:"🌊 Fresh • Aquatic • Clean", groupDesc:"Best for daytime & warm weather", price:369000, priceFormatted:"Rp 369.000", notes:["Bergamot","Orange Blossom","Earl Grey Tea","Jasmine","Rose","Fig","White Musk","Cedarwood","Warm Amber"], topNotes:["Bergamot","Orange Blossom","Earl Grey Tea"], middleNotes:["Jasmine","Rose","Fig"], baseNotes:["White Musk","Cedarwood","Warm Amber"], description:"Relaxed and mindful with Earl Grey tea, fig, and rose creating a calm comforting aura.", longevity:"6-8 hours", sillage:"Soft to Moderate" },
-            { id:12, name:"Verona", brand:"Mykonos", group:"sweet", groupLabel:"🌙 Sweet • Spicy • Captivating", groupDesc:"Designed for evenings & special encounters", price:419000, priceFormatted:"Rp 419.000", notes:["Bergamot","Pink Pepper","Black Pepper","Rose","Geranium","Saffron","Oud","Amber","Patchouli"], topNotes:["Bergamot","Pink Pepper","Black Pepper"], middleNotes:["Rose","Geranium","Saffron"], baseNotes:["Oud","Amber","Patchouli"], description:"Romantic Italian nights with rose, saffron, and oud creating a passionate mysterious aura.", longevity:"10-12 hours", sillage:"Heavy" },
-            { id:13, name:"Luminos", brand:"Mykonos", group:"fresh", groupLabel:"🌊 Fresh • Aquatic • Clean", groupDesc:"Best for daytime & warm weather", price:439000, priceFormatted:"Rp 439.000", notes:["Blue Java Banana","Bergamot","Ozonic Notes","Tuberose","Lily of the Valley","Rose","Orange Blossom","Cashmere Wood","Amber","Amberwood"], topNotes:["Blue Java Banana","Bergamot","Ozonic Notes"], middleNotes:["Tuberose","Lily of the Valley","Rose","Orange Blossom"], baseNotes:["Cashmere Wood","Amber","Amberwood"], description:"Tropical luminous scent with Blue Java banana, tuberose, and ozonic breeze on cashmere wood.", longevity:"6-8 hours", sillage:"Moderate" },
-            { id:14, name:"Matcha Latte", brand:"Mykonos", group:"sweet", groupLabel:"🌙 Sweet • Spicy • Captivating", groupDesc:"Designed for evenings & special encounters", price:389000, priceFormatted:"Rp 389.000", notes:["Matcha Green Tea","Bergamot","Fig","Milky Notes","White Chocolate","Jasmine","Tonka Bean","Vanilla","Cedarwood"], topNotes:["Matcha Green Tea","Bergamot","Fig"], middleNotes:["Milky Notes","White Chocolate","Jasmine"], baseNotes:["Tonka Bean","Vanilla","Cedarwood"], description:"Cozy gourmand with matcha, white chocolate, and milky notes on a vanilla-tonka base.", longevity:"8-10 hours", sillage:"Moderate" },
-            { id:15, name:"Monaco Royale", brand:"Mykonos", group:"structured", groupLabel:"💼 Structured • Warm • Refined", groupDesc:"Ideal for professional & formal settings", price:449000, priceFormatted:"Rp 449.000", notes:["Sweet Melon","Juicy Pear","Rose","Jasmine","Freesia","Warm Caramel","Patchouli","Amber","Musk"], topNotes:["Sweet Melon","Juicy Pear"], middleNotes:["Rose","Jasmine","Freesia"], baseNotes:["Warm Caramel","Patchouli","Amber","Musk"], description:"Aristocratic elegance with melon, pear, and rose melting into warm caramel and patchouli.", longevity:"6-8 hours", sillage:"Moderate" },
-            { id:16, name:"Bonfire Vanilla", brand:"Mykonos", group:"sweet", groupLabel:"🌙 Sweet • Spicy • Captivating", groupDesc:"Designed for evenings & special encounters", price:349000, priceFormatted:"Rp 349.000", notes:["Toasted Marshmallow","Bergamot","Incense","Vanilla Orchid","Guaiac Wood","Vanilla Bean","Amber","Benzoin"], topNotes:["Toasted Marshmallow","Bergamot"], middleNotes:["Incense","Vanilla Orchid","Guaiac Wood"], baseNotes:["Vanilla Bean","Amber","Benzoin"], description:"Warm nostalgic with toasted marshmallow, incense, and vanilla bean like a cozy bonfire.", longevity:"10-12 hours", sillage:"Heavy" },
-            { id:17, name:"Aphrodite", brand:"Mykonos", group:"sweet", groupLabel:"🌙 Sweet • Spicy • Captivating", groupDesc:"Designed for evenings & special encounters", price:479000, priceFormatted:"Rp 479.000", notes:["Jasmine","Burnt Cinnamon","Myrrh","Cedarwood","Bitter Coffee","Tobacco","Vanilla","Almond","Sandalwood","Musk"], topNotes:["Jasmine","Burnt Cinnamon","Myrrh"], middleNotes:["Cedarwood","Bitter Coffee","Tobacco"], baseNotes:["Vanilla","Almond","Sandalwood","Musk"], description:"Goddess-like allure with burnt cinnamon, bitter coffee, and tobacco on vanilla-almond base.", longevity:"10-12 hours", sillage:"Heavy" },
-            { id:18, name:"Blaze", brand:"Mykonos", group:"structured", groupLabel:"💼 Structured • Warm • Refined", groupDesc:"Ideal for professional & formal settings", price:419000, priceFormatted:"Rp 419.000", notes:["Ginger","Pepper","Citrus","Leather","Cinnamon","Labdanum","Woody Notes","Amber","Musk","Patchouli"], topNotes:["Ginger","Pepper","Citrus"], middleNotes:["Leather","Cinnamon","Labdanum"], baseNotes:["Woody Notes","Amber","Musk","Patchouli"], description:"Fiery and bold with ginger, leather, and cinnamon on a smoky woody amber base.", longevity:"8-10 hours", sillage:"Heavy" },
-            { id:19, name:"On The Rocks", brand:"Mykonos", group:"structured", groupLabel:"💼 Structured • Warm • Refined", groupDesc:"Ideal for professional & formal settings", price:419000, priceFormatted:"Rp 419.000", notes:["Bergamot","Lemon","Whiskey Notes","Chocolate","Coffee","Cardamom","Vanilla","Amber","Oakwood","Patchouli"], topNotes:["Bergamot","Lemon","Whiskey Notes"], middleNotes:["Chocolate","Coffee","Cardamom"], baseNotes:["Vanilla","Amber","Oakwood","Patchouli"], description:"Sophisticated cocktail of whiskey, chocolate, and coffee on vanilla-oakwood base.", longevity:"8-10 hours", sillage:"Moderate to Heavy" },
-            { id:20, name:"Vanilla Clouds", brand:"Mykonos", group:"sweet", groupLabel:"🌙 Sweet • Spicy • Captivating", groupDesc:"Designed for evenings & special encounters", price:369000, priceFormatted:"Rp 369.000", notes:["Marshmallow","Mandarin Orange","Vanilla Bean","Orchid","White Musk","Sandalwood","Amber"], topNotes:["Marshmallow","Mandarin Orange"], middleNotes:["Vanilla Bean","Orchid"], baseNotes:["White Musk","Sandalwood","Amber"], description:"Dreamy and soft like floating on vanilla clouds with marshmallow, orchid, and sandalwood.", longevity:"8-10 hours", sillage:"Soft to Moderate" },
-            
-            // VELIXIR - 11 variants
-            { id:21, name:"Uranus", brand:"Velixir", group:"velixir", groupLabel:"✨ Velixir • Fresh • Bold", groupDesc:"Energetic and cosmic freshness", price:299000, priceFormatted:"Rp 299.000", notes:["Sicilian Orange","Bergamot","Neroli","Pink Pepper","Nutmeg","Cardamom","Vetiver"], topNotes:["Sicilian Orange","Bergamot"], middleNotes:["Neroli","Pink Pepper","Nutmeg","Cardamom"], baseNotes:["Vetiver"], description:"Cosmic freshness with Sicilian orange, neroli, and spicy cardamom on vetiver base.", longevity:"6-8 hours", sillage:"Moderate" },
-            { id:22, name:"Galatea", brand:"Velixir", group:"velixir", groupLabel:"✨ Velixir • Sweet • Gourmand", groupDesc:"Indulgent and delicious sweetness", price:319000, priceFormatted:"Rp 319.000", notes:["Biscuit","Caramel","Milk","Honey","White Sugar","Tonka Bean","White Musk","Vanilla","Praline","Amber"], topNotes:["Biscuit","Caramel"], middleNotes:["Milk","Honey","White Sugar","Tonka Bean"], baseNotes:["White Musk","Vanilla","Praline","Amber"], description:"Sweet indulgence with biscuit, caramel, and honey melting into vanilla-praline dream.", longevity:"8-10 hours", sillage:"Heavy" },
-            { id:23, name:"Adonis", brand:"Velixir", group:"velixir", groupLabel:"✨ Velixir • Fresh • Bold", groupDesc:"Energetic and cosmic freshness", price:289000, priceFormatted:"Rp 289.000", notes:["Lavender","Bergamot","Mint","Madagascar Vanilla","Benzoin","Amber","Tonka Bean","Woody Notes"], topNotes:["Lavender","Bergamot","Mint"], middleNotes:["Madagascar Vanilla","Benzoin"], baseNotes:["Amber","Tonka Bean","Woody Notes"], description:"Divine masculinity with lavender, mint, and Madagascar vanilla on amber-tonka base.", longevity:"6-8 hours", sillage:"Moderate" },
-            { id:24, name:"Morpheus", brand:"Velixir", group:"velixir", groupLabel:"✨ Velixir • Fresh • Bold", groupDesc:"Energetic and cosmic freshness", price:309000, priceFormatted:"Rp 309.000", notes:["Citron","Sicilian Orange","Bergamot","Ginger","Neroli","Ambroxan","Guaiac Wood","Black Tea"], topNotes:["Citron","Sicilian Orange","Bergamot"], middleNotes:["Ginger","Neroli"], baseNotes:["Ambroxan","Guaiac Wood","Black Tea"], description:"Dreamlike and ethereal with citron, ginger, and black tea on ambroxan-guaiac base.", longevity:"6-8 hours", sillage:"Moderate" },
-            { id:25, name:"Concordia", brand:"Velixir", group:"velixir", groupLabel:"✨ Velixir • Fresh • Bold", groupDesc:"Energetic and cosmic freshness", price:279000, priceFormatted:"Rp 279.000", notes:["Bergamot","Grapefruit","Ginger"], topNotes:["Bergamot"], middleNotes:["Grapefruit"], baseNotes:["Ginger"], description:"Harmonious simplicity with bergamot, grapefruit, and ginger for balanced freshness.", longevity:"4-6 hours", sillage:"Soft" },
-            { id:26, name:"Icarus", brand:"Velixir", group:"velixir", groupLabel:"✨ Velixir • Fresh • Bold", groupDesc:"Energetic and cosmic freshness", price:329000, priceFormatted:"Rp 329.000", notes:["Pear","Calabrian Bergamot","Mandarin Orange","Ginger","Orange Blossom","Georgywood","Musk","Ambrofix","Akigalawood","Cedarwood"], topNotes:["Pear","Calabrian Bergamot","Mandarin Orange"], middleNotes:["Ginger","Orange Blossom","Georgywood"], baseNotes:["Musk","Ambrofix","Akigalawood","Cedarwood"], description:"Soaring freshness with pear, Calabrian bergamot, and ginger on innovative woody musk base.", longevity:"6-8 hours", sillage:"Moderate" },
-            { id:27, name:"Demeter", brand:"Velixir", group:"velixir", groupLabel:"✨ Velixir • Fresh • Green", groupDesc:"Fresh green, minty, clean", price:269000, priceFormatted:"Rp 269.000", notes:["Mint","Lemon","Basil","Thyme","Rosemary","Blackcurrant","Lavender","Jasmine","Cedarwood","Musk"], topNotes:["Mint","Lemon","Basil","Thyme"], middleNotes:["Rosemary","Blackcurrant","Lavender","Jasmine"], baseNotes:["Cedarwood","Musk"], description:"Fresh green and minty with basil, thyme, and rosemary on a clean cedarwood-musk base.", longevity:"4-6 hours", sillage:"Soft to Moderate" },
-            { id:28, name:"Apollo", brand:"Velixir", group:"velixir", groupLabel:"✨ Velixir • Fresh • Masculine", groupDesc:"Aventus DNA, masculine and versatile", price:349000, priceFormatted:"Rp 349.000", notes:["Pineapple","Bergamot","Black Currant","Apple","Birch","Patchouli","Jasmine","Musk","Oakmoss","Ambergris","Vanilla"], topNotes:["Pineapple","Bergamot","Black Currant","Apple"], middleNotes:["Birch","Patchouli","Jasmine"], baseNotes:["Musk","Oakmoss","Ambergris","Vanilla"], description:"Aventus-inspired masculine versatility with pineapple, birch, and smoky oakmoss.", longevity:"8-10 hours", sillage:"Heavy" },
-            { id:29, name:"Ares", brand:"Velixir", group:"velixir", groupLabel:"✨ Velixir • Fresh • Sporty", groupDesc:"Fresh sporty for daily wear", price:279000, priceFormatted:"Rp 279.000", notes:["Mandarin Orange","Grapefruit","Lemon","Orange Blossom","Musk","Cedar","Sandalwood","Amber"], topNotes:["Mandarin Orange","Grapefruit","Lemon"], middleNotes:["Orange Blossom"], baseNotes:["Musk","Cedar","Sandalwood","Amber"], description:"Fresh sporty energy with citrus burst and orange blossom on woody amber base.", longevity:"6-8 hours", sillage:"Moderate" },
-            { id:30, name:"Hera", brand:"Velixir", group:"velixir", groupLabel:"✨ Velixir • Fresh • Elegant", groupDesc:"Fresh sweet elegant, calmer than Apollo", price:319000, priceFormatted:"Rp 319.000", notes:["Pear","Mandarin Orange","Citrus","Violet","Lavender","Musk","Sandalwood","Vanilla","Patchouli"], topNotes:["Pear","Mandarin Orange","Citrus"], middleNotes:["Violet","Lavender"], baseNotes:["Musk","Sandalwood","Vanilla","Patchouli"], description:"Fresh sweet elegance with pear and violet, calmer and more refined than Apollo.", longevity:"6-8 hours", sillage:"Moderate" },
-            { id:31, name:"Artemis", brand:"Velixir", group:"velixir", groupLabel:"✨ Velixir • Fresh • Aquatic", groupDesc:"Fresh aquatic unique and clean", price:289000, priceFormatted:"Rp 289.000", notes:["Watery Notes","Pear","Ambrette","Ylang-Ylang","Jasmine","Patchouli"], topNotes:["Watery Notes","Pear","Ambrette"], middleNotes:["Ylang-Ylang","Jasmine"], baseNotes:["Patchouli"], description:"Unique fresh aquatic with watery notes, pear, and ylang-ylang on patchouli base.", longevity:"4-6 hours", sillage:"Soft" }
-        ];
-
-        const allNotes = [...new Set(perfumes.flatMap(p => p.notes))].sort();
-
-        const noteCategories = {
-            "🍊 Citrus & Fruits": allNotes.filter(n => ["Bergamot","Orange","Lemon","Mandarin","Grapefruit","Lime","Lychee","Pear","Peach","Melon","Apple","Pineapple","Banana","Citron","Fizzy","Pineapple","Black Currant"].some(k => n.toLowerCase().includes(k.toLowerCase()))),
-            "🌸 Florals": allNotes.filter(n => ["Jasmine","Rose","Lavender","Lily","Orchid","Tuberose","Neroli","Orange Blossom","Freesia","Geranium","Valley","Blossom","Violet","Ylang-Ylang"].some(k => n.toLowerCase().includes(k.toLowerCase()))),
-            "🪵 Woods & Earth": allNotes.filter(n => ["Wood","Cedar","Sandalwood","Oak","Guaiac","Vetiver","Patchouli","Moss","Orris","Oud","Amberwood","Cashmere","Softwood","Oakwood","Georgywood","Akigalawood","Birch"].some(k => n.toLowerCase().includes(k.toLowerCase()))),
-            "🌶️ Spices": allNotes.filter(n => ["Ginger","Cinnamon","Pepper","Cardamom","Clove","Nutmeg","Saffron","Myrrh","Basil","Thyme"].some(k => n.toLowerCase().includes(k.toLowerCase()))),
-            "🍬 Gourmand & Sweet": allNotes.filter(n => ["Vanilla","Caramel","Praline","Chocolate","Coffee","Marshmallow","Biscuit","Honey","Sugar","Tonka","Milk","White Chocolate","Almond"].some(k => n.toLowerCase().includes(k.toLowerCase()))),
-            "☁️ Musk & Amber": allNotes.filter(n => ["Musk","Amber","Ambroxan","Ambrofix","Modern Amber","Warm Amber","Ambergris"].some(k => n.toLowerCase().includes(k.toLowerCase()))),
-            "🟤 Resins & Smokes": allNotes.filter(n => ["Incense","Smoke","Smoky","Leather","Benzoin","Myrrh","Tobacco","Whiskey","Labdanum"].some(k => n.toLowerCase().includes(k.toLowerCase()))),
-            "💧 Aquatic & Fresh": allNotes.filter(n => ["Water","Marine","Ozonic","Sea","Green Tea","Earl Grey","Matcha","Mint","Coconut","Green Notes","Watery"].some(k => n.toLowerCase().includes(k.toLowerCase())))
-        };
-
-        const noteColors = {
-            "🍊 Citrus & Fruits": "bg-yellow-50 text-yellow-700 border-yellow-200",
-            "🌸 Florals": "bg-pink-50 text-pink-700 border-pink-200",
-            "🪵 Woods & Earth": "bg-amber-50 text-amber-800 border-amber-200",
-            "🌶️ Spices": "bg-red-50 text-red-700 border-red-200",
-            "🍬 Gourmand & Sweet": "bg-purple-50 text-purple-700 border-purple-200",
-            "☁️ Musk & Amber": "bg-stone-50 text-stone-700 border-stone-200",
-            "🟤 Resins & Smokes": "bg-orange-50 text-orange-700 border-orange-200",
-            "💧 Aquatic & Fresh": "bg-cyan-50 text-cyan-700 border-cyan-200"
-        };
-
-        const storeLocations = {
-            watsons: [
-                { name: "Watsons Grand Indonesia", lat: -6.1944, lng: 106.8229, address: "West Mall L3, Jl. M.H. Thamrin No.1" },
-                { name: "Watsons Plaza Indonesia", lat: -6.2088, lng: 106.8226, address: "L1, Jl. M.H. Thamrin Kav. 28-30" },
-                { name: "Watsons Senayan City", lat: -6.2274, lng: 106.7974, address: "LG Floor, Jl. Asia Afrika Lot 19" },
-                { name: "Watsons Pacific Place", lat: -6.2245, lng: 106.8229, address: "B1 Level, Jl. Jend. Sudirman Kav. 52-53" },
-                { name: "Watsons Kota Kasablanka", lat: -6.2236, lng: 106.8400, address: "UG Floor, Jl. Casablanca Raya Kav. 88" },
-                { name: "Watsons Mall Taman Anggrek", lat: -6.1789, lng: 106.7923, address: "L1, Jl. Letjen S. Parman Kav. 21" },
-                { name: "Watsons Lippo Mall Puri", lat: -6.1888, lng: 106.7369, address: "G Floor, Jl. Puri Indah Raya" },
-                { name: "Watsons AEON Mall BSD", lat: -6.3013, lng: 106.6430, address: "L1, Jl. BSD Raya Utama" }
-            ],
-            guardian: [
-                { name: "Guardian Grand Indonesia", lat: -6.1944, lng: 106.8229, address: "East Mall LG, Jl. M.H. Thamrin No.1" },
-                { name: "Guardian Plaza Senayan", lat: -6.2259, lng: 106.7996, address: "L1, Jl. Asia Afrika No.8" },
-                { name: "Guardian Mall Kelapa Gading", lat: -6.1573, lng: 106.9073, address: "L1, Jl. Bulevar Kelapa Gading Blok M" },
-                { name: "Guardian Central Park", lat: -6.1774, lng: 106.7907, address: "LG Floor, Jl. Letjen S. Parman Kav. 28" },
-                { name: "Guardian Emporium Pluit", lat: -6.1639, lng: 106.7905, address: "L1, Jl. Pluit Selatan Raya" },
-                { name: "Guardian Mall Artha Gading", lat: -6.1463, lng: 106.8927, address: "L1, Jl. Artha Gading Selatan" },
-                { name: "Guardian Cilandak Town Square", lat: -6.2915, lng: 106.8008, address: "L1, Jl. TB Simatupang Kav. 17" },
-                { name: "Guardian Mall of Indonesia", lat: -6.1578, lng: 106.8924, address: "L1, Jl. Yos Sudarso" }
-            ],
-            beautyhaul: [
-                { name: "BeautyHaul Senayan Park", lat: -6.2145, lng: 106.8030, address: "L1, Jl. Gerbang Pemuda No.3 (Velixir & Mykonos)" },
-                { name: "BeautyHaul PIK Avenue", lat: -6.1080, lng: 106.7430, address: "LG Floor, Jl. Pantai Indah Kapuk (Velixir & Mykonos)" },
-                { name: "BeautyHaul Mall of Indonesia", lat: -6.1578, lng: 106.8924, address: "L2, Jl. Yos Sudarso (Velixir & Mykonos)" },
-                { name: "BeautyHaul Summarecon Mall Serpong", lat: -6.2378, lng: 106.6285, address: "G Floor, Jl. Gading Serpong Blvd (Velixir & Mykonos)" },
-                { name: "BeautyHaul Lippo Mall Puri", lat: -6.1888, lng: 106.7369, address: "L1, Jl. Puri Indah Raya (Velixir & Mykonos)" },
-                { name: "BeautyHaul Kota Kasablanka", lat: -6.2236, lng: 106.8400, address: "L2, Jl. Casablanca Raya Kav. 88 (Velixir & Mykonos)" }
-            ]
-        };
-
-        let selectedNotes = new Set();
-        let map;
-        let isViewAll = false;
-
-        function init() {
-            renderNoteCategories();
-            initMap();
-        }
-
-        function initMap() {
-            map = L.map('map').setView([-6.2088, 106.8456], 11);
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '© OpenStreetMap contributors'
-            }).addTo(map);
-
-            const watsonsList = document.getElementById('watsonsList');
-            storeLocations.watsons.forEach(store => {
-                L.marker([store.lat, store.lng], {
-                    icon: L.divIcon({
-                        className: 'custom-marker',
-                        html: `<div style="background:#3b82f6;color:white;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;border:2px solid white;box-shadow:0 2px 4px rgba(0,0,0,0.2);">W</div>`,
-                        iconSize: [28, 28], iconAnchor: [14, 14]
-                    })
-                }).addTo(map).bindPopup(`<b style="color:#1e40af">${store.name}</b><br>${store.address}`);
-                const li = document.createElement('li');
-                li.innerHTML = `<b>${store.name}</b><br><span class="text-xs text-blue-600 ml-2">${store.address}</span>`;
-                watsonsList.appendChild(li);
-            });
-
-            const guardianList = document.getElementById('guardianList');
-            storeLocations.guardian.forEach(store => {
-                L.marker([store.lat, store.lng], {
-                    icon: L.divIcon({
-                        className: 'custom-marker',
-                        html: `<div style="background:#f97316;color:white;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;border:2px solid white;box-shadow:0 2px 4px rgba(0,0,0,0.2);">G</div>`,
-                        iconSize: [28, 28], iconAnchor: [14, 14]
-                    })
-                }).addTo(map).bindPopup(`<b style="color:#c2410c">${store.name}</b><br>${store.address}`);
-                const li = document.createElement('li');
-                li.innerHTML = `<b>${store.name}</b><br><span class="text-xs text-orange-600 ml-2">${store.address}</span>`;
-                guardianList.appendChild(li);
-            });
-
-            const beautyhaulList = document.getElementById('beautyhaulList');
-            storeLocations.beautyhaul.forEach(store => {
-                L.marker([store.lat, store.lng], {
-                    icon: L.divIcon({
-                        className: 'custom-marker',
-                        html: `<div style="background:#9333ea;color:white;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;border:2px solid white;box-shadow:0 2px 4px rgba(0,0,0,0.2);">B</div>`,
-                        iconSize: [28, 28], iconAnchor: [14, 14]
-                    })
-                }).addTo(map).bindPopup(`<b style="color:#6b21a8">${store.name}</b><br>${store.address}<br><i>Velixir & Mykonos available</i>`);
-                const li = document.createElement('li');
-                li.innerHTML = `<b>${store.name}</b><br><span class="text-xs text-purple-600 ml-2">${store.address}</span><br><span class="text-xs text-purple-500 ml-2 italic">Velixir & Mykonos</span>`;
-                beautyhaulList.appendChild(li);
-            });
-        }
-
-        function viewAllPerfumes() {
-            isViewAll = true;
-            selectedNotes.clear();
-            document.getElementById('selectedNotesSection').classList.add('hidden');
-            document.getElementById('emptyState').classList.add('hidden');
-            document.getElementById('resultsSection').classList.remove('hidden');
-            document.getElementById('noResults').classList.add('hidden');
-            
-            document.querySelectorAll('.note-pill').forEach(pill => pill.classList.remove('active'));
-            
-            const results = perfumes.map(perfume => ({
-                ...perfume,
-                matchCount: 0,
-                matchPercentage: 0,
-                matchingNotes: []
-            }));
-            
-            document.getElementById('matchCount').textContent = results.length;
-            renderResults(results);
-        }
-
-        function renderNoteCategories() {
-            const container = document.getElementById('notesCategories');
-            container.innerHTML = '';
-            for (const [category, notes] of Object.entries(noteCategories)) {
-                if (notes.length === 0) continue;
-                const section = document.createElement('div');
-                section.className = 'mb-6';
-                const header = document.createElement('div');
-                header.className = 'flex items-center gap-3 mb-3';
-                header.innerHTML = `<h3 class="font-semibold text-perfume-800 text-lg">${category}</h3>`;
-                const pillsContainer = document.createElement('div');
-                pillsContainer.className = 'flex flex-wrap gap-2';
-                notes.forEach(note => {
-                    const pill = document.createElement('button');
-                    const emoji = getNoteEmoji(note);
-                    pill.className = `note-pill px-4 py-2 rounded-full border-2 font-medium text-sm ${noteColors[category]} ${selectedNotes.has(note) ? 'active' : ''}`;
-                    pill.innerHTML = `${emoji} ${note}`;
-                    pill.onclick = () => toggleNote(note);
-                    pillsContainer.appendChild(pill);
-                });
-                section.appendChild(header);
-                section.appendChild(pillsContainer);
-                container.appendChild(section);
-            }
-        }
-
-        function toggleNote(note) {
-            isViewAll = false;
-            if (selectedNotes.has(note)) selectedNotes.delete(note);
-            else selectedNotes.add(note);
-            updateUI();
-        }
-
-        function clearAllNotes() { 
-            isViewAll = false;
-            selectedNotes.clear(); 
-            updateUI(); 
-        }
-
-        function updateUI() {
-            if (isViewAll) return;
-            
-            document.querySelectorAll('.note-pill').forEach(pill => {
-                const noteText = pill.textContent.replace(/^[^\w\s]/, '').trim();
-                if (selectedNotes.has(noteText)) pill.classList.add('active');
-                else pill.classList.remove('active');
-            });
-
-            const selectedSection = document.getElementById('selectedNotesSection');
-            const selectedContainer = document.getElementById('selectedNotesContainer');
-            
-            if (selectedNotes.size === 0) {
-                selectedSection.classList.add('hidden');
-                document.getElementById('resultsSection').classList.add('hidden');
-                document.getElementById('emptyState').classList.remove('hidden');
-                return;
-            }
-
-            selectedSection.classList.remove('hidden');
-            selectedContainer.innerHTML = '';
-            selectedNotes.forEach(note => {
-                const badge = document.createElement('span');
-                const emoji = getNoteEmoji(note);
-                badge.className = 'inline-flex items-center gap-1 px-3 py-1.5 bg-gold-100 text-gold-800 rounded-full text-sm font-medium border border-gold-200';
-                badge.innerHTML = `${emoji} ${note} <button onclick="toggleNote('${note}')" class="hover:text-gold-600 ml-1">❌</button>`;
-                selectedContainer.appendChild(badge);
-            });
-
-            searchPerfumes();
-        }
-
-        function searchPerfumes() {
-            if (isViewAll) return;
-            
-            const results = perfumes.map(perfume => {
-                const matchingNotes = perfume.notes.filter(note => selectedNotes.has(note));
-                const matchCount = matchingNotes.length;
-                const matchPercentage = selectedNotes.size > 0 ? (matchCount / selectedNotes.size) * 100 : 0;
-                return { ...perfume, matchCount, matchPercentage, matchingNotes };
-            }).filter(p => p.matchCount > 0);
-
-            results.sort((a, b) => {
-                if (b.matchPercentage !== a.matchPercentage) return b.matchPercentage - a.matchPercentage;
-                return b.matchCount - a.matchCount;
-            });
-
-            document.getElementById('matchCount').textContent = results.length;
-            document.getElementById('emptyState').classList.add('hidden');
-            document.getElementById('resultsSection').classList.remove('hidden');
-            
-            const grid = document.getElementById('resultsGrid');
-            const noResults = document.getElementById('noResults');
-            
-            if (results.length === 0) {
-                grid.innerHTML = '';
-                noResults.classList.remove('hidden');
-                return;
-            }
-            
-            noResults.classList.add('hidden');
-            renderResults(results);
-        }
-
-        function renderResults(results) {
-            const grid = document.getElementById('resultsGrid');
-            grid.innerHTML = '';
-
-            results.forEach((perfume, index) => {
-                const matchPercent = Math.round(perfume.matchPercentage);
-                const isVelixir = perfume.brand === 'Velixir';
-                const groupClass = perfume.group === 'fresh' ? 'fresh' : perfume.group === 'structured' ? 'structured' : perfume.group === 'sweet' ? 'sweet' : 'velixir';
-                const groupIcon = perfume.group === 'fresh' ? '🌊' : perfume.group === 'structured' ? '💼' : perfume.group === 'sweet' ? '🌙' : '✨';
-                const topEmojis = getTopEmojis(perfume.topNotes, 4);
-                const barClass = isVelixir ? 'scent-bar-velixir' : 'scent-bar';
-                const badgeClass = isVelixir ? 'match-badge-velixir' : 'match-badge';
-                
-                const card = document.createElement('div');
-                card.className = 'perfume-card bg-white rounded-2xl overflow-hidden shadow-md border border-perfume-100 cursor-pointer';
-                card.style.animationDelay = `${index * 0.05}s`;
-                card.onclick = () => showDetail(perfume);
-                
-                card.innerHTML = `
-                    <div class="relative bg-gradient-to-br ${isVelixir ? 'from-velixir-50 to-velixir-100' : 'from-perfume-100 to-perfume-200'} p-6 text-center">
-                        <div class="emoji-visual mb-2">${topEmojis}</div>
-                        <div class="absolute top-3 right-3"><span class="${badgeClass} text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">${isViewAll ? '👁️' : '⭐ ' + matchPercent + '%'} Match</span></div>
-                        <div class="absolute top-3 left-3"><span class="group-badge ${groupClass} text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">${groupIcon} ${perfume.brand}</span></div>
-                    </div>
-                    <div class="p-5">
-                        <div class="mb-2">
-                            <h3 class="font-serif text-xl font-bold text-perfume-900 leading-tight">${perfume.name}</h3>
-                            <p class="text-xs text-perfume-500 mt-1">🧴 ${perfume.brand} • ${perfume.groupDesc}</p>
-                        </div>
-                        <div class="mb-3 ${isVelixir ? 'bg-velixir-50 border-velixir-200' : 'bg-gold-50 border-gold-100'} rounded-lg p-3 border">
-                            <p class="text-lg font-bold ${isVelixir ? 'text-velixir-700' : 'text-gold-700'} text-center">💰 ${perfume.priceFormatted}</p>
-                        </div>
-                        ${!isViewAll ? `
-                        <div class="mb-3">
-                            <div class="flex items-center justify-between text-sm mb-1"><span class="text-perfume-500">🎯 Match</span><span class="font-semibold ${isVelixir ? 'text-velixir-600' : 'text-gold-600'}">${perfume.matchCount}/${selectedNotes.size} notes</span></div>
-                            <div class="w-full bg-perfume-100 rounded-full h-1.5"><div class="${barClass} rounded-full" style="width: ${matchPercent}%"></div></div>
-                        </div>
-                        <div class="flex flex-wrap gap-1 mb-4">
-                            ${perfume.matchingNotes.slice(0, 4).map(note => `<span class="text-xs ${isVelixir ? 'bg-velixir-50 text-velixir-700 border-velixir-200' : 'bg-gold-50 text-gold-700 border-gold-200'} px-2 py-0.5 rounded-md border font-medium">${getNoteEmoji(note)} ${note}</span>`).join('')}
-                            ${perfume.matchingNotes.length > 4 ? `<span class="text-xs text-perfume-400 px-1">+${perfume.matchingNotes.length - 4}</span>` : ''}
-                        </div>
-                        ` : `
-                        <div class="flex flex-wrap gap-1 mb-4">
-                            ${perfume.topNotes.slice(0, 3).map(note => `<span class="text-xs ${isVelixir ? 'bg-velixir-50 text-velixir-700 border-velixir-200' : 'bg-gold-50 text-gold-700 border-gold-200'} px-2 py-0.5 rounded-md border font-medium">${getNoteEmoji(note)} ${note}</span>`).join('')}
-                            <span class="text-xs text-perfume-400 px-1">...</span>
-                        </div>
-                        `}
-                        <div class="flex items-center justify-between pt-3 border-t border-perfume-100 text-xs text-perfume-500"><span>⏱️ ${perfume.longevity}</span><span>💨 ${perfume.sillage}</span><span class="${isVelixir ? 'text-velixir-600' : 'text-gold-600'} font-medium">📋 Detail →</span></div>
-                    </div>
-                `;
-                grid.appendChild(card);
-            });
-        }
-
-        function sortResults() {
-            const sortValue = document.getElementById('sortSelect').value;
-            if (!isViewAll) searchPerfumes();
-            const grid = document.getElementById('resultsGrid');
-            const cards = Array.from(grid.children);
-            cards.sort((a, b) => {
-                if (sortValue === 'name') return a.querySelector('h3').textContent.localeCompare(b.querySelector('h3').textContent);
-                if (sortValue === 'group') {
-                    const groups = ['fresh','structured','sweet','velixir'];
-                    const groupA = groups.findIndex(g => a.querySelector('.group-badge').classList.contains(g));
-                    const groupB = groups.findIndex(g => b.querySelector('.group-badge').classList.contains(g));
-                    return groupA - groupB;
-                }
-                if (sortValue === 'brand') {
-                    return a.querySelector('h3').textContent.localeCompare(b.querySelector('h3').textContent);
-                }
-                return 0;
-            });
-            cards.forEach(card => grid.appendChild(card));
-        }
-
-        function showDetail(perfume) {
-            const modal = document.getElementById('detailModal');
-            const content = document.getElementById('modalContent');
-            const isVelixir = perfume.brand === 'Velixir';
-            const groupClass = perfume.group === 'fresh' ? 'fresh' : perfume.group === 'structured' ? 'structured' : perfume.group === 'sweet' ? 'sweet' : 'velixir';
-            const groupIcon = perfume.group === 'fresh' ? '🌊' : perfume.group === 'structured' ? '💼' : perfume.group === 'sweet' ? '🌙' : '✨';
-            const groupName = perfume.group === 'fresh' ? '🌊 Fresh • Aquatic • Clean' : perfume.group === 'structured' ? '💼 Structured • Warm • Refined' : perfume.group === 'sweet' ? '🌙 Sweet • Spicy • Captivating' : '✨ Velixir • Cosmic Freshness';
-            const topEmojis = getTopEmojis(perfume.notes, 6);
-            
-            content.innerHTML = `
-                <div class="relative">
-                    <div class="bg-gradient-to-br ${isVelixir ? 'from-velixir-50 to-velixir-100' : 'from-perfume-100 to-perfume-200'} p-8 text-center relative">
-                        <div class="text-7xl mb-4">${topEmojis}</div>
-                        <button onclick="closeModal()" class="absolute top-4 right-4 w-10 h-10 bg-white/30 backdrop-blur-md rounded-full flex items-center justify-center text-perfume-800 hover:bg-white/50 transition-colors text-xl">✕</button>
-                        <span class="group-badge ${groupClass} text-white text-xs font-bold px-3 py-1 rounded-full mb-2 inline-block">${groupIcon} ${groupName}</span>
-                        <p class="${isVelixir ? 'text-velixir-600' : 'text-gold-600'} font-semibold text-sm uppercase tracking-wider mb-1">🧴 ${perfume.brand}</p>
-                        <h2 class="font-serif text-3xl font-bold text-perfume-900 mb-2">${perfume.name}</h2>
-                        <p class="text-perfume-600 text-sm">${perfume.groupDesc}</p>
-                    </div>
-                    <div class="p-6 md:p-8">
-                        <div class="${isVelixir ? 'bg-velixir-50 border-velixir-200' : 'bg-gold-50 border-gold-200'} rounded-xl p-4 mb-6 border text-center">
-                            <p class="text-xs ${isVelixir ? 'text-velixir-600' : 'text-gold-600'} mb-1">💰 Price</p>
-                            <p class="font-serif text-3xl font-bold ${isVelixir ? 'text-velixir-700' : 'text-gold-700'}">${perfume.priceFormatted}</p>
-                        </div>
-                        <div class="mb-6">
-                            <p class="text-sm text-perfume-500 mb-2">📝 Description</p>
-                            <p class="text-perfume-700 leading-relaxed">${perfume.description}</p>
-                        </div>
-                        <div class="grid grid-cols-2 gap-4 mb-6">
-                            <div class="bg-perfume-50 rounded-xl p-4 text-center"><p class="text-2xl mb-1">⏱️</p><p class="text-xs text-perfume-500 mb-1">Longevity</p><p class="font-semibold text-perfume-800">${perfume.longevity}</p></div>
-                            <div class="bg-perfume-50 rounded-xl p-4 text-center"><p class="text-2xl mb-1">💨</p><p class="text-xs text-perfume-500 mb-1">Sillage</p><p class="font-semibold text-perfume-800">${perfume.sillage}</p></div>
-                        </div>
-                        <div class="mb-6">
-                            <p class="text-sm text-perfume-500 mb-3">🌿 Fragrance Notes</p>
-                            <div class="mb-3">
-                                <p class="text-xs font-semibold ${isVelixir ? 'text-velixir-600' : 'text-gold-600'} uppercase tracking-wide mb-2">✨ Top Notes</p>
-                                <div class="flex flex-wrap gap-2">${perfume.topNotes.map(note => {
-                                    const isSelected = selectedNotes.has(note);
-                                    const emoji = getNoteEmoji(note);
-                                    return `<span class="px-3 py-1.5 rounded-full text-sm font-medium ${isSelected ? (isVelixir ? 'bg-velixir-100 text-velixir-800 border-2 border-velixir-300' : 'bg-gold-100 text-gold-800 border-2 border-gold-300') : 'bg-perfume-100 text-perfume-600 border border-perfume-200'}">${isSelected ? '✓ ' : ''}${emoji} ${note}</span>`;
-                                }).join('')}</div>
-                            </div>
-                            <div class="mb-3">
-                                <p class="text-xs font-semibold ${isVelixir ? 'text-velixir-600' : 'text-gold-600'} uppercase tracking-wide mb-2">💫 Heart Notes</p>
-                                <div class="flex flex-wrap gap-2">${perfume.middleNotes.map(note => {
-                                    const isSelected = selectedNotes.has(note);
-                                    const emoji = getNoteEmoji(note);
-                                    return `<span class="px-3 py-1.5 rounded-full text-sm font-medium ${isSelected ? (isVelixir ? 'bg-velixir-100 text-velixir-800 border-2 border-velixir-300' : 'bg-gold-100 text-gold-800 border-2 border-gold-300') : 'bg-perfume-100 text-perfume-600 border border-perfume-200'}">${isSelected ? '✓ ' : ''}${emoji} ${note}</span>`;
-                                }).join('')}</div>
-                            </div>
-                            <div>
-                                <p class="text-xs font-semibold ${isVelixir ? 'text-velixir-600' : 'text-gold-600'} uppercase tracking-wide mb-2">🌙 Base Notes</p>
-                                <div class
-                                }).join('')}</div>
-                            </div>
-                            <div>
-                                <p class="text-xs font-semibold ${isVelixir ? 'text-velixir-600' : 'text-gold-600'} uppercase tracking-wide mb-2">🌙 Base Notes</p>
-                                <div class="flex flex-wrap gap-2">${perfume.baseNotes.map(note => {
-                                    const isSelected = selectedNotes.has(note);
-                                    const emoji = getNoteEmoji(note);
-                                    return `<span class="px-3 py-1.5 rounded-full text-sm font-medium ${isSelected ? (isVelixir ? 'bg-velixir-100 text-velixir-800 border-2 border-velixir-300' : 'bg-gold-100 text-gold-800 border-2 border-gold-300') : 'bg-perfume-100 text-perfume-600 border border-perfume-200'}">${isSelected ? '✓ ' : ''}${emoji} ${note}</span>`;
-                                }).join('')}</div>
-                            </div>
-                        </div>
-                        <div class="flex gap-3">
-                            <button onclick="closeModal()" class="flex-1 bg-perfume-100 text-perfume-700 font-semibold py-3 rounded-xl hover:bg-perfume-200 transition-colors">❌ Close</button>
-                            <button onclick="alert('💾 Save to wishlist coming soon!')" class="flex-1 ${isVelixir ? 'bg-gradient-to-r from-velixir-500 to-velixir-600 shadow-velixir-200' : 'bg-gradient-to-r from-gold-500 to-gold-600 shadow-gold-200'} text-white font-semibold py-3 rounded-xl hover:opacity-90 transition-all shadow-lg">❤️ Save</button>
-                        </div>
-                    </div>
-                </div>
-            `;
-            modal.classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeModal() {
-            document.getElementById('detailModal').classList.add('hidden');
-            document.body.style.overflow = '';
-        }
-
-        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
-
-        init();
-    </script>
+    // Auto-reload iframe tepat setelah reset
+    if (lastNormal && n.getTime() !== lastNormal.getTime()) reloadFrame();
+    if (lastMirage && m.getTime() !== lastMirage.getTime()) reloadFrame();
+    lastNormal = n; lastMirage = m;
+  }
+  function reloadFrame(){
+    if (frame.style.display === 'none') return;
+    frame.src = frame.src.split('?')[0] + '?t=' + Date.now();
+  }
+  tick();
+  setInterval(tick, 1000);
+})();
+</script>
 </body>
 </html>
-
